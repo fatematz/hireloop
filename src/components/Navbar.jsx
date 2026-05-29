@@ -43,10 +43,10 @@ const Navbar = () => {
                 <div className="h-4 w-[1px] bg-neutral-700 mx-1"></div>
 
                 <div className="flex items-center gap-3">
-                    <Link href="/login" className="text-sm font-medium text-[#6366f1] hover:text-[#4f46e5] transition-colors duration-200 px-3 py-1.5">
+                    <Link href="/signin" className="text-sm font-medium text-[#6366f1] hover:text-[#4f46e5] transition-colors duration-200 px-3 py-1.5">
                         Sign In
                     </Link>
-                    <Link href="/get-started" className="bg-white text-black font-semibold text-sm px-4 py-2 rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-md">
+                    <Link href="/signup" className="bg-white text-black font-semibold text-sm px-4 py-2 rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-md">
                         Get Started
                     </Link>
                 </div>
@@ -60,10 +60,10 @@ const Navbar = () => {
                 {/* Divider for Mobile */}
                 <div className="w-16 h-[1px] bg-neutral-800"></div>
 
-                <Link href="/login" onClick={() => setIsOpen(false)} className="text-[#6366f1] hover:text-[#4f46e5] transition-colors">
+                <Link href="/signin" onClick={() => setIsOpen(false)} className="text-[#6366f1] hover:text-[#4f46e5] transition-colors">
                     Sign In
                 </Link>
-                <Link href="/get-started" onClick={() => setIsOpen(false)} className="bg-white text-black font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition-all shadow-md">
+                <Link href="/signup" onClick={() => setIsOpen(false)} className="bg-white text-black font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition-all shadow-md">
                     Get Started
                 </Link>
             </div>
