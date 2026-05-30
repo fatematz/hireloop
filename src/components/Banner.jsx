@@ -1,16 +1,17 @@
 import Image from 'next/image';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiBriefcase, FiLayers, FiUsers, FiStar } from 'react-icons/fi';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import bannerImg from '@/assets/globe.png';
 
 const Banner = () => {
     return (
-        <section className="relative w-full bg-[#0d0d0d] text-white font-sans overflow-hidden pt-12 pb-24 px-6 md:px-12 flex flex-col items-center justify-center min-h-[90vh]">
+        // ন্যাভবারের নিচের গ্যাপ বাড়ানোর জন্য pt-12 থেকে বাড়িয়ে pt-24 করা হয়েছে
+        <section className="relative w-full bg-[#0d0d0d] text-white font-sans overflow-hidden pt-24 pb-24 px-6 md:px-12 flex flex-col items-center justify-center min-h-[90vh]">
             
             {/* 1. Badge Section */}
             <div className="mb-6 flex items-center justify-center">
                 <div className="inline-flex items-center gap-2 bg-[#1a1a1a]/80 border border-neutral-800 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-gray-300 shadow-md">
-                    <span className="text-base">💼</span>
+                    <FiBriefcase className="text-sm text-purple-400" />
                     <span className="text-white font-bold">50,000+</span> 
                     <span className="text-neutral-500 font-medium">NEW JOBS THIS MONTH</span>
                 </div>
@@ -68,11 +69,11 @@ const Banner = () => {
             </div>
 
             {/* 5. Globe Image & Stats Heading Wrapper */}
-            <div className="relative w-full max-w-[1320px] mx-auto mt-6 flex flex-col items-center">
+            {/* এখানে mt-6 থেকে কমিয়ে mt-[-20px] বা mt-0 করা হয়েছে যাতে গ্লোবের ওপরের ফাঁকা জায়গা কমে আসে */}
+            <div className="relative w-full max-w-[1320px] mx-auto mt-[-20px] flex flex-col items-center">
                 
                 {/* Globe Image Container */}
                 <div className="relative w-full aspect-[4/3] md:aspect-[3/1] max-h-[700px] overflow-hidden rounded-t-[100px] md:rounded-t-[200px]">
-                    {/* Blue Glow overlay on top of Globe */}
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent to-transparent z-10 pointer-events-none"></div>
                     
                     <Image 
@@ -83,39 +84,40 @@ const Banner = () => {
                         className="object-cover opacity-85"
                     />
 
-                    {/* গ্লোবের একদম নিচের অংশে ডার্ক শ্যাডো ইফেক্ট, যা কার্ডের বর্ডার ও গ্লাস লুককে সুন্দর ফুটিয়ে তুলবে */}
+                    {/* গ্লোবের নিচের ডার্ক শ্যাডো ইফেক্ট */}
                     <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#0d0d0d] to-transparent z-10 pointer-events-none"></div>
                 </div>
 
-                {/* Subtitle overlapping the Globe */}
+                {/* Subtitle overlapping the Globe (আগের পজিশন একদম সেম রাখা হয়েছে) */}
                 <div className="absolute top-1/4 md:top-1/3 text-center z-20 px-4 w-full">
                     <h3 className="text-xl mt-20 md:text-3xl lg:text-4xl font-semibold tracking-tight text-white leading-snug drop-shadow-md">
                         Assisting over <span className="text-neutral-400">15,000 job seekers</span> <br /> find their dream positions.
                     </h3>
                 </div>
 
+                {/* Cards Container */}
                 <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 px-2 z-20 ">
                     {/* Card 1 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
-                        <div className="text-neutral-400 text-lg">💼</div>
+                        <div className="text-neutral-400 text-lg"><FiBriefcase /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">50K</div>
                         <div className="text-xs text-neutral-500 font-medium">Active Jobs</div>
                     </div>
                     {/* Card 2 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
-                        <div className="text-neutral-400 text-lg">🏢</div>
+                        <div className="text-neutral-400 text-lg"><FiLayers /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">12K</div>
                         <div className="text-xs text-neutral-500 font-medium">Companies</div>
                     </div>
                     {/* Card 3 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
-                        <div className="text-neutral-400 text-lg">🔍</div>
+                        <div className="text-neutral-400 text-lg"><FiUsers /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">2M</div>
                         <div className="text-xs text-neutral-500 font-medium">Job Seekers</div>
                     </div>
                     {/* Card 4 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
-                        <div className="text-neutral-400 text-lg">⭐</div>
+                        <div className="text-neutral-400 text-lg"><FiStar /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">97%</div>
                         <div className="text-xs text-neutral-500 font-medium">Satisfaction Rate</div>
                     </div>
