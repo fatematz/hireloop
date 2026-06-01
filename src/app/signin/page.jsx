@@ -1,19 +1,32 @@
 'use client'; 
 
+import { authClient } from '@/lib/auth-client';
+import { redirect } from 'next/navigation';
 import React, { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 
 const SignInPage = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState('info@izmahsa.com');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
         const fromData = new FormData(e.currentTarget);
         const user = Object.fromEntries(fromData.entries());
-        console.log(user);
+        
+
+                const {data, error} = await authClient.signIn.email({
+                    email: user.email,
+                    password: user.password,
+                })
+        
+                if(data){
+                    redirect('/')
+                }
+        
+            
 
        
     };
