@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
-// import { authClient } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 const SignUpPage = () => {
     const router = useRouter();
@@ -14,12 +14,29 @@ const SignUpPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleSubmit =  (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const fromData = new FormData(e.currentTarget);
         const user = Object.fromEntries(fromData.entries());
         console.log(user);
+
+        const {data, error} = await authClient.signUp.email({
+            email: user.email,
+            password: user.password,
+            name: user.name,
+            image: user.image
+        })
+
+        if(data){
+            redirect('/')
+        }
+
+         if (authError) {
+        setError(authError.message); 
+    }
+
+       
      
     };
 
@@ -45,7 +62,7 @@ const SignUpPage = () => {
                         <label className="text-xs font-semibold text-gray-700">Full Name</label>
                         <input
                             type="text"
-                            name='text'
+                            name='name'
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Enter your full name"
@@ -96,7 +113,7 @@ const SignUpPage = () => {
                         </div>
                         <input
                             type="url"
-                            name='photo'
+                            name='image'
                             value={imageUrl}
                             onChange={(e) => setImageUrl(e.target.value)}
                             placeholder="https://example.com/image.jpg"
