@@ -1,11 +1,27 @@
+'use client'
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FiSearch, FiBriefcase, FiLayers, FiUsers, FiStar } from 'react-icons/fi';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import bannerImg from '@/assets/globe.png';
+import { motion } from "motion/react"
 
 const Banner = () => {
+    const text = "Hello world!";
+    const [loopKey, setLoopKey] = useState(0);
+
+    useEffect(() => {
+        // (অক্ষর সংখ্যা * প্রতিটি অক্ষরের ডিলে) + সামান্য একটু পজ টাইম
+        const totalDuration = (text.length * 80) + 2000; 
+
+        const interval = setInterval(() => {
+            setLoopKey((prev) => prev + 1); // কী পরিবর্তন করে অ্যানিমেশন আবার শুরু করা হচ্ছে
+        }, totalDuration);
+
+        return () => clearInterval(interval);
+    }, [text.length]);
+
     return (
-        // ন্যাভবারের নিচের গ্যাপ বাড়ানোর জন্য pt-12 থেকে বাড়িয়ে pt-24 করা হয়েছে
         <section className="relative w-full bg-[#0d0d0d] text-white font-sans overflow-hidden pt-24 pb-24 px-6 md:px-12 flex flex-col items-center justify-center min-h-[90vh]">
             
             {/* 1. Badge Section */}
@@ -22,15 +38,31 @@ const Banner = () => {
                 <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-white leading-tight">
                     Find Your Dream Job Today
                 </h1>
-                <p className="text-sm md:text-base text-neutral-400 leading-relaxed max-w-2xl mx-auto">
+                <p className="text-sm md:text-base text-neutral-400 leading-relaxed max-w-2xl mx-auto mb-6">
                     HireLoop connects top talent with world-class companies. Browse thousands of curated opportunities and land your next role — faster.
                 </p>
+                
+                {/* অবিরত টাইপিং লুপ (আগের স্টাইলেই) */}
+                <div key={loopKey} className="text-xl font-mono text-indigo-400 min-h-[1.75rem]">
+                    {text.split("").map((char, index) => (
+                        <motion.span
+                            key={index}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }} // ঠিক আগের মতোই ওয়ান-টাইম ফেড ইন
+                            transition={{
+                                duration: 0.05,
+                                delay: index * 0.08, // তোমার আগের স্পিড
+                            }}
+                        >
+                            {char === " " ? "\u00A0" : char}
+                        </motion.span>
+                    ))}
+                </div>
             </div>
 
             {/* 3. Search Bar Section */}
             <div className="w-full max-w-3xl z-10 mb-6 px-2">
                 <div className="bg-[#141414]/90 border border-neutral-800/80 rounded-2xl md:rounded-full p-2 flex flex-col md:flex-row items-center gap-3 shadow-2xl backdrop-blur-md">
-                    {/* Input 1: Job Title */}
                     <div className="w-full flex items-center gap-3 px-3 py-2 md:py-0">
                         <FiSearch className="text-neutral-500 text-xl flex-shrink-0" />
                         <input 
@@ -40,10 +72,8 @@ const Banner = () => {
                         />
                     </div>
 
-                    {/* Vertical Divider for desktop */}
                     <div className="hidden md:block h-6 w-[1px] bg-neutral-800"></div>
 
-                    {/* Input 2: Location */}
                     <div className="w-full flex items-center gap-3 px-3 py-2 md:py-0 border-t border-neutral-900 md:border-t-0">
                         <HiOutlineLocationMarker className="text-neutral-500 text-xl flex-shrink-0" />
                         <input 
@@ -53,7 +83,6 @@ const Banner = () => {
                         />
                     </div>
 
-                    {/* Search Button */}
                     <button className="w-full md:w-auto bg-[#6366f1] hover:bg-[#4f46e5] text-white p-3.5 rounded-xl md:rounded-full flex items-center justify-center transition-all duration-200 shadow-lg shadow-[#6366f1]/20 cursor-pointer">
                         <FiSearch className="text-white text-lg" />
                     </button>
@@ -69,10 +98,7 @@ const Banner = () => {
             </div>
 
             {/* 5. Globe Image & Stats Heading Wrapper */}
-            {/* এখানে mt-6 থেকে কমিয়ে mt-[-20px] বা mt-0 করা হয়েছে যাতে গ্লোবের ওপরের ফাঁকা জায়গা কমে আসে */}
             <div className="relative w-full max-w-[1320px] mx-auto mt-[-20px] flex flex-col items-center">
-                
-                {/* Globe Image Container */}
                 <div className="relative w-full aspect-[4/3] md:aspect-[3/1] max-h-[700px] overflow-hidden rounded-t-[100px] md:rounded-t-[200px]">
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent to-transparent z-10 pointer-events-none"></div>
                     
@@ -84,38 +110,31 @@ const Banner = () => {
                         className="object-cover opacity-85"
                     />
 
-                    {/* গ্লোবের নিচের ডার্ক শ্যাডো ইফেক্ট */}
                     <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#0d0d0d] to-transparent z-10 pointer-events-none"></div>
                 </div>
 
-                {/* Subtitle overlapping the Globe (আগের পজিশন একদম সেম রাখা হয়েছে) */}
                 <div className="absolute top-1/4 md:top-1/3 text-center z-20 px-4 w-full">
                     <h3 className="text-xl mt-20 md:text-3xl lg:text-4xl font-semibold tracking-tight text-white leading-snug drop-shadow-md">
                         Assisting over <span className="text-neutral-400">15,000 job seekers</span> <br /> find their dream positions.
                     </h3>
                 </div>
 
-                {/* Cards Container */}
                 <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 px-2 z-20 ">
-                    {/* Card 1 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
                         <div className="text-neutral-400 text-lg"><FiBriefcase /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">50K</div>
                         <div className="text-xs text-neutral-500 font-medium">Active Jobs</div>
                     </div>
-                    {/* Card 2 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
                         <div className="text-neutral-400 text-lg"><FiLayers /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">12K</div>
                         <div className="text-xs text-neutral-500 font-medium">Companies</div>
                     </div>
-                    {/* Card 3 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
                         <div className="text-neutral-400 text-lg"><FiUsers /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">2M</div>
                         <div className="text-xs text-neutral-500 font-medium">Job Seekers</div>
                     </div>
-                    {/* Card 4 */}
                     <div className="bg-[#111111]/80 border border-neutral-900 p-6 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
                         <div className="text-neutral-400 text-lg"><FiStar /></div>
                         <div className="text-3xl md:text-4xl font-bold text-white tracking-tight">97%</div>
