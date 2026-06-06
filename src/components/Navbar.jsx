@@ -55,7 +55,7 @@ const Navbar = () => {
             <div className="max-w-[1320px] w-full mx-auto px-8 md:px-0 py-4 flex items-center justify-between text-white font-sans relative z-50">
                 
                 {/* Logo */}
-                <div className="flex items-center gap-2 cursor-pointer">
+                <Link href="/" className="flex items-center gap-2 cursor-pointer">
                     <div className="flex items-center gap-3 cursor-pointer select-none">
                         <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-[#7928CA] to-[#FF0080] shadow-lg">
                             <span className="text-white font-bold text-xl">P</span>
@@ -64,7 +64,7 @@ const Navbar = () => {
                             <span>Hiring Loop</span>
                         </div>
                     </div>
-                </div>
+                </Link>
 
                 {/* Hamburger Menu Button */}
                 <button 
@@ -83,6 +83,11 @@ const Navbar = () => {
                         <Link href="/browse-jobs" className="hover:text-white transition-colors duration-200">Browse Jobs</Link>
                         <Link href="/company" className="hover:text-white transition-colors duration-200">Company</Link>
                         <Link href="/pricing" className="hover:text-white transition-colors duration-200">Pricing</Link>
+                        
+                        {/* ডেস্কটপে ড্যাশবোর্ড লিংকটি এখানে যোগ করা হয়েছে (লগইন থাকলে দেখাবে) */}
+                        {session && (
+                            <Link href="/dashboard/recruiter" className="hover:text-white transition-colors duration-200 text-indigo-400">Dashboard</Link>
+                        )}
                     </div>
 
                     <div className="h-4 w-[1px] bg-neutral-700 mx-1"></div>
@@ -97,6 +102,11 @@ const Navbar = () => {
                     <Link href="/browse-jobs" onClick={() => setIsOpen(false)} className="text-gray-300 hover:text-white transition-colors">Browse Jobs</Link>
                     <Link href="/company" onClick={() => setIsOpen(false)} className="text-gray-300 hover:text-white transition-colors">Company</Link>
                     <Link href="/pricing" onClick={() => setIsOpen(false)} className="text-gray-300 hover:text-white transition-colors">Pricing</Link>
+                    
+                    {/* মোবাইল মেনুতেও লগইন থাকা অবস্থায় সঠিক রুট দেওয়া হলো */}
+                    {session && (
+                        <Link href="/dashboard/recruiter" onClick={() => setIsOpen(false)} className="text-indigo-400 hover:text-white transition-colors">Dashboard</Link>
+                    )}
                     
                     <div className="flex items-center gap-3">
                         <AuthActions session={session} handleLogout={handleLogout} setIsOpen={setIsOpen} />
