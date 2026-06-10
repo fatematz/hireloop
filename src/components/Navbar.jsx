@@ -80,7 +80,7 @@ const Navbar = () => {
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-4 bg-[#18181b]/80 border border-neutral-800/50 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl">
                     <div className="flex items-center gap-6 text-sm font-medium text-gray-300 mr-2">
-                        <Link href="/browse-jobs" className="hover:text-white transition-colors duration-200">Browse Jobs</Link>
+                        <Link href="/browse/browsejobs" className="hover:text-white transition-colors duration-200">Browse Jobs</Link>
                         <Link href="/company" className="hover:text-white transition-colors duration-200">Company</Link>
                         <Link href="/pricing" className="hover:text-white transition-colors duration-200">Pricing</Link>
                         
