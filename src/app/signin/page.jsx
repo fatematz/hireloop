@@ -1,41 +1,52 @@
 'use client'; 
 
 import { authClient } from '@/lib/auth-client';
-import { redirect } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 
 const SignInPage = () => {
+    const router = useRouter(); // রিডাইরেক্ট করার জন্য যোগ করা হলো
+    const searchParams = useSearchParams(); 
+    const redirectTo = searchParams.get("redirect") || "/";
+
+    // UI States
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
- 
+    const [isLoading, setIsLoading] = useState(false); // লোডিং স্টেট
+    const [error, setError] = useState(''); // এরর মেসেজ স্টেট
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(""); // আগের এরর রিসেট করা
+        setIsLoading(true); // লোডিং শুরু
         
         const fromData = new FormData(e.currentTarget);
         const user = Object.fromEntries(fromData.entries());
-        console.log(user)
-        
 
-                const {data, error} = await authClient.signIn.email({
-                    email: user.email,
-                    password: user.password,
-                })
-        
-                if(data){
-                    redirect('/')
-                }
-        
-            
-
-       
+        try {
+            const { data, error: authError } = await authClient.signIn.email({
+                email: user.email,
+                password: user.password,
+            });
+    
+            if (authError) {
+                // auth-client থেকে কোনো এরর আসলে তা দেখানো
+                setError(authError.message || "Invalid email or password.");
+            } else if (data) {
+                // সফল হলে আগের নির্দিষ্ট পেজে রিডাইরেক্ট করা
+                router.push(redirectTo);
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false); // লোডিং শেষ
+        }
     };
 
     return (
         <div className="light w-full min-h-[70vh] flex items-center justify-center bg-[#fafafa] py-12">
-            
             <div className="w-full max-w-[400px] bg-white p-8 rounded-xl border border-gray-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] mx-4">
                 
                 {/* Header Text */}
@@ -48,6 +59,14 @@ const SignInPage = () => {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                    
+                    {/* Error Message UI */}
+                    {error && (
+                        <div className="p-3 text-xs font-medium rounded-md bg-red-50 text-red-600 border border-red-200">
+                            {error}
+                        </div>
+                    )}
+
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold text-gray-700">Email</label>
                         <input
@@ -56,7 +75,8 @@ const SignInPage = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email"
-                            className="w-full px-4 py-2.5 bg-white border border-indigo-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-100 transition text-gray-950 text-sm"
+                            className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition text-gray-950 text-sm"
+                            disabled={isLoading}
                             required
                         />
                     </div>
@@ -71,30 +91,34 @@ const SignInPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your Password"
                                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-gray-950 text-sm pr-10"
+                                disabled={isLoading}
                                 required
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition flex items-center justify-center cursor-pointer z-10"
+                                disabled={isLoading}
                             >
                                 {showPassword ? <IoEyeOffOutline size={18} /> : <IoEyeOutline size={18} />}
                             </button>
                         </div>
                     </div>
 
+                    {/* Button with Loading State */}
                     <button
                         type="submit"
-                        className="w-full bg-[#5d54ff] hover:bg-indigo-700 text-white font-medium py-3 rounded-md transition mt-2 cursor-pointer text-sm"
+                        disabled={isLoading}
+                        className="w-full bg-[#5d54ff] hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-medium py-3 rounded-md transition mt-2 cursor-pointer text-sm flex items-center justify-center"
                     >
-                        Sign In
+                        {isLoading ? "Signing In..." : "Sign In"}
                     </button>
                 </form>
 
                 <div className="mt-6 flex flex-col gap-2 text-xs font-medium">
                     <p className="text-gray-400">
-                        Don't have an account?
-                        <a href="/signup" className="text-indigo-600 hover:underline">
+                        Don't have an account?{" "}
+                        <a href={`/signup?redirect=${redirectTo}`} className="text-indigo-600 hover:underline">
                             Sign Up
                         </a>
                     </p>
