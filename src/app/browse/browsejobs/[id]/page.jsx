@@ -9,8 +9,16 @@ const BrowseJobDetailsPage = async ({ params }) => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
     let job = null;
 
+    if( user.role !== "seeker"){
+        return(
+            <div className="">
+                <h2>Only Job Seeker can see this</h2>
+            </div>
+        )
+    }
+
     try {
-        const res = await fetch(`${baseUrl}/api/browsejobs/${id}`, { cache: 'no-store' });
+        const res = await fetch(`${baseUrl}/api/browsejobs/${id}`);
         if (res.ok) {
             job = await res.json();
         }
@@ -106,13 +114,12 @@ const BrowseJobDetailsPage = async ({ params }) => {
                             </div>
                         </div>
 
-                        {/* 🌟 কন্ডিশনাল বাটন লজিক */}
                         <div className="mt-8">
                             <Link 
                                 href={ `/browse/browsejobs/${id}/apply` } 
                                 className="w-full block text-center bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-xl transition-all duration-200"
                             >
-                             Apply Now
+                             See More Details
                             </Link>
                         </div>
                     </div>
