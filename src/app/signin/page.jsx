@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 
 const SignInPage = () => {
-    const router = useRouter(); // রিডাইরেক্ট করার জন্য যোগ করা হলো
+    const router = useRouter(); 
     const searchParams = useSearchParams(); 
     const redirectTo = searchParams.get("redirect") || "/";
 
@@ -14,13 +14,13 @@ const SignInPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // লোডিং স্টেট
-    const [error, setError] = useState(''); // এরর মেসেজ স্টেট
+    const [isLoading, setIsLoading] = useState(false); 
+    const [error, setError] = useState(''); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(""); // আগের এরর রিসেট করা
-        setIsLoading(true); // লোডিং শুরু
+        setError(""); 
+        setIsLoading(true); 
         
         const fromData = new FormData(e.currentTarget);
         const user = Object.fromEntries(fromData.entries());
@@ -32,16 +32,14 @@ const SignInPage = () => {
             });
     
             if (authError) {
-                // auth-client থেকে কোনো এরর আসলে তা দেখানো
                 setError(authError.message || "Invalid email or password.");
             } else if (data) {
-                // সফল হলে আগের নির্দিষ্ট পেজে রিডাইরেক্ট করা
                 router.push(redirectTo);
             }
         } catch (err) {
             setError("Something went wrong. Please try again.");
         } finally {
-            setIsLoading(false); // লোডিং শেষ
+            setIsLoading(false); 
         }
     };
 
