@@ -23,12 +23,16 @@ const SignUpPage = () => {
     const user = Object.fromEntries(fromData.entries());
     console.log(user);
 
+
+    const plan = role === 'seeker' ? 'seeker_free' : 'recruiter_free';
+
     const { data, error } = await authClient.signUp.email({
       email: email,
       password: password,
       name: name,
       image: imageUrl,
       role: role,
+      plan: plan,
     });
 
     if (data) {
