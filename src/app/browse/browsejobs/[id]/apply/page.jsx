@@ -1,3 +1,4 @@
+import { getPlanBYId } from "@/lib/api/plans";
 import { userinfo } from "@/lib/core/userinfo";
 import Link from "next/link";
 
@@ -8,6 +9,14 @@ const BrowseJobDetailsPage = async ({ params }) => {
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
     let job = null;
+    let applicationCount = 0;
+
+
+    // plan 
+
+    const plan = await getPlanBYId(user?.plan || 'seeker_free')
+    console.log(plan, "plan");
+
 
     if (user?.role !== "seeker") {
         return (
@@ -26,8 +35,17 @@ const BrowseJobDetailsPage = async ({ params }) => {
         if (res.ok) {
             job = await res.json();
         }
+
+        const applicantId = user?.id || user?._id; 
+        if (applicantId) {
+            const appsRes = await fetch(`${baseUrl}/api/applications?applicantId=${applicantId}`);
+            if (appsRes.ok) {
+                const userApplications = await appsRes.json();
+                applicationCount = userApplications.length; 
+            }
+        }
     } catch (err) {
-        console.error("Error fetching job details:", err);
+        console.error("Error fetching data:", err);
     }
 
     if (!job) {
@@ -37,6 +55,12 @@ const BrowseJobDetailsPage = async ({ params }) => {
             </div>
         );
     }
+
+    const limit = plan?.maxApplicationsPerMonth || 3;
+    const hasReachedLimit = applicationCount >= limit;
+    const targetLink = hasReachedLimit 
+        ? "/pricing" 
+        : `/browse/browsejobs/${id}/apply/applyform`;
 
     return (
         <div className="min-h-screen bg-slate-900 text-white pt-24 pb-16 px-4 md:px-8">
@@ -63,7 +87,6 @@ const BrowseJobDetailsPage = async ({ params }) => {
                         </div>
                     </div>
 
-                    {/* Core Responsibilities */}
                     <div className="p-6 rounded-xl bg-black border border-zinc-800/80 shadow-md">
                         <h3 className="text-lg font-bold text-white border-b border-zinc-800 pb-2 mb-4 flex items-center gap-2">
                             <span className="text-purple-500">🎯</span> Core Responsibilities
@@ -94,6 +117,7 @@ const BrowseJobDetailsPage = async ({ params }) => {
                     </div>
                 </div>
 
+                {/* ─── ডান পাশের Job Overview বক্স ─── */}
                 <div className="lg:col-span-1">
                     <div className="bg-black border border-zinc-800 p-6 rounded-xl lg:sticky lg:top-24 shadow-lg">
                         <h3 className="text-lg font-bold mb-6 text-white border-b border-zinc-800 pb-2">Job Overview</h3>
@@ -132,12 +156,21 @@ const BrowseJobDetailsPage = async ({ params }) => {
                             </div>
                         </div>
 
-                        <div className="mt-8">
+                        {/* লিমিট এবং অ্যাকশন সেকশন */}
+                        <div className="mt-6 text-center">
+                            <p className="text-xs text-gray-400 mb-2">
+                                Used Applications: <span className={hasReachedLimit ? "text-red-400 font-bold" : "text-purple-400 font-bold"}>{applicationCount}</span> / {limit}
+                            </p>
+                            
                             <Link 
-                                href={`/browse/browsejobs/${id}/apply/applyform`} 
-                                className="w-full block text-center bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-md shadow-purple-900/20"
+                                href={targetLink} 
+                                className={`w-full block text-center font-semibold py-3 rounded-xl transition-all duration-200 shadow-md ${
+                                    hasReachedLimit 
+                                        ? "bg-amber-600 hover:bg-amber-700 text-white shadow-amber-900/20" 
+                                        : "bg-purple-600 hover:bg-purple-700 text-white shadow-purple-900/20"
+                                }`}
                             >
-                                Apply Now
+                                {hasReachedLimit ? "🚀 Upgrade Plan to Apply" : "Apply Now"}
                             </Link>
                         </div>
                     </div>
